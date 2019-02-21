@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ArvindNair001/Cloud_Dedup#readme",
   "dependencies": {
     "googleapis": "^37.2.0",
-    "js-sha1": "^0.6.0"
+    "js-sha1": "^0.6.0",
+    "package.json": "^2.0.1"
   }
 }

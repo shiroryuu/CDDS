@@ -298,6 +298,7 @@
 <script src="assets/js/jquery.easing.1.3.js"></script>
 
 <script src="assets/js/main.js"></script>
+<script src="assets/js/controller.js"></script>
 
 </body>
 </html>
