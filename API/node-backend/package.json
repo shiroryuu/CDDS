@@ -1,0 +1,23 @@
+{
+  "name": "cloud_dedup",
+  "version": "1.0.0",
+  "description": "Cloud Deduplication ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ArvindNair001/Cloud_Dedup.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArvindNair001/Cloud_Dedup/issues"
+  },
+  "homepage": "https://github.com/ArvindNair001/Cloud_Dedup#readme",
+  "dependencies": {
+    "googleapis": "^37.2.0",
+    "js-sha1": "^0.6.0"
+  }
+}
