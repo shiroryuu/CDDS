@@ -115,23 +115,3 @@ function downloadFiles(auth){
         .pipe(dest);
     });
 }
-
-
-// function downloadFiles(auth){
-//     //const drive = google.drive({version: 'v3', auth});
-//     var drive = google.drive('v3');
-//     var fileId = '0B44Wg1cRlCu_U1ZSY0xRX3dLOFk';
-//     var dest = fs.createWriteStream('/home/arvind/Documents/project.pdf');
-//     drive.files.get({
-//         auth: auth,
-//         fileId: fileId,
-//         alt: 'media'
-//     })
-//     .on('end', function () {
-//         console.log('Done');
-//     })
-//     .on('error', function (err) {
-//         console.log('Error during download', err);
-//     })
-//     .pipe(dest);   
-// }
