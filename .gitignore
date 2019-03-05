@@ -1,2 +1,2 @@
-./API/node-backend/package-lock.json
-./API/node-backend/node_modules
+package-lock.json
+node_modules
