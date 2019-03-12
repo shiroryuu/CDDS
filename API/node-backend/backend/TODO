@@ -1,0 +1,1 @@
+Switch from js-sha1 to inbuilt crypto module.
