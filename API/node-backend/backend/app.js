@@ -11,7 +11,7 @@ const app = express();
 
 const keyfile = path.join(__dirname, 'credentials.json');
 
-
+const TOKEN_PATH = 'token.json';
 const keys = JSON.parse(fs.readFileSync(keyfile));
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 
@@ -103,7 +103,7 @@ function checkAccessToken(callback){
   const oAuth2Client = new google.auth.OAuth2(
     client_id, client_secret, redirect_uris[0]
   );
-  const TOKEN_PATH = 'token.json';
+  
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getAccessToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
