@@ -3,7 +3,7 @@ const { google } = require('googleapis');
 const path = require('path');
 const readline = require('readline');
 const fs = require('fs');
-// const opn  = require('opn ');
+const opn  = require('opn');
 
 const drive = require('./drive');
 const chunk = require('./chunk');
@@ -66,7 +66,19 @@ app.get("/files",(req,res,next)=>{
     //return the list of files
     // drive.listFiles();
 
-    checkAccessToken(drive.listFiles);
+    checkAccessToken(drive.listFiles,(resData)=>{
+      let files = [];
+      resData.map((file) =>{
+        files.push({
+              name: file.name,
+              id: file.id,
+              mimeType: file.mimeType
+            });
+      });
+      res.status(200).json({
+        files
+      })
+    });
     
     // drive.onInit(drive.listFiles, ()=>{
     //   res.status(200).json("successfull");
@@ -76,7 +88,15 @@ app.get("/files",(req,res,next)=>{
 app.get("/files/:file_id",(req,res,next)=>{
   const fileID = req.params.file_id;
   console.log(fileID);
-  res.status(200).json("successfull");
+  checkAccessToken(drive.downloadFiles,fileID,(resData)=>{
+    res.status(200).json({
+      message: "successfull",
+      file: {
+        name: resData.filename,
+        path: resData.filepath
+      }
+  });
+  });
   //call Download function with the fileID
 });
 
@@ -99,7 +119,7 @@ app.get("/chunks/:filename", (req,res,next)=>{
 
 
 //functions 
-function checkAccessToken(callback){
+function checkAccessToken(callback,fileID,cb){
   const oAuth2Client = new google.auth.OAuth2(
     client_id, client_secret, redirect_uris[0]
   );
@@ -107,7 +127,7 @@ function checkAccessToken(callback){
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getAccessToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
+    callback(oAuth2Client,fileID,cb);
   });
 }
 
@@ -117,6 +137,7 @@ function getAccessToken(oAuth2Client, callback){
     scope: SCOPES,
   });
   console.log('Authorize this app by visiting this url:', authUrl);
+  opn(authUrl, {wait: false});
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,

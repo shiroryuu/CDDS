@@ -1,6 +1,8 @@
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
+const path = require('path');
+const uuid = require('uuid');
 //const drive = google.drive({version: 'v3', auth});
 
 // If modifying these scopes, delete token.json.
@@ -9,6 +11,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // created automatically when the authorization flow completes for the first
 // time.
 const TOKEN_PATH = 'token.json';
+const FILES_PATH = path.join(__dirname,'./Files');
 
 // Load client secrets from a local file.
 
@@ -68,7 +71,7 @@ function getAccessToken(oAuth2Client, callback) {
  * Lists the names and IDs of up to 10 files.
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function listFiles(auth) {
+function listFiles(auth,cb) {
     const drive = google.drive({version: 'v3', auth});
     // drive.files.list({
     //   pageSize: 20,
@@ -80,10 +83,11 @@ function listFiles(auth) {
       if (err) return console.log('The API returned an error: ' + err);
       const files = res.data.files;
       if (files.length) {
-        console.log('Files:');
-        files.map((file) => {
-          console.log(`${file.name} (${file.id}) [${file.mimeType}]`);
-        });
+        // console.log('Files:');
+        return cb(files);
+        // files.map((file) => {
+        //   console.log(`${file.name} (${file.id}) [${file.mimeType}]`);
+        // });
       } else {
         console.log('No files found.');
       }
@@ -91,23 +95,31 @@ function listFiles(auth) {
 }
 
 
-function downloadFiles(auth){
+function downloadFiles(auth,fileId,cb){
     //const drive = google.drive({version: 'v3', auth});
-    var drive = google.drive('v3');
-    var fileId = '1hRdVOGYIM5VpjE4d7KvzcOlWcrkQD9EC';
-    var dest = fs.createWriteStream('/home/arvind/Documents/BE Project/Cloud/Downloads/ch4_image_transforms.pdf');
+    const drive = google.drive('v3');
+    // var fileId = '1hRdVOGYIM5VpjE4d7KvzcOlWcrkQD9EC';
+    // console.log(fileId);
+    const filename = uuid.v4();
+    const filepath = path.join(FILES_PATH, filename);
+
+    // console.log(filepath);
+    let dest = fs.createWriteStream(filepath);
     drive.files.get({
         auth: auth,
         fileId: fileId,
         alt: 'media'
     },{responseType: 'stream'},
     function(err, res){
+      console.log(res);
         res.data
         .on('end', () => {
             console.log('Done');
+            return cb({filename,FILES_PATH});
         })
         .on('error', err => {
             console.log('Error', err);
+            return cb(err);
         })
         .pipe(dest);
     });
@@ -130,4 +142,4 @@ function downloadFile(auth,fileId,) {
 
 }
 
-module.exports = { listFiles,onInit }
+module.exports = { listFiles,downloadFiles,onInit }
