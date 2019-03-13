@@ -9,11 +9,12 @@ const drive = require('./drive');
 const chunk = require('./chunk');
 const app = express();
 
-const keyfile = path.join(__dirname, 'credentials.json');
 
 const TOKEN_PATH = 'token.json';
-const keys = JSON.parse(fs.readFileSync(keyfile));
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
+
+const keyfile = path.join(__dirname, 'credentials.json');
+const keys = JSON.parse(fs.readFileSync(keyfile));
 
 //HTTP Headers
 app.use((req,res,next) => {
@@ -27,27 +28,7 @@ app.use((req,res,next) => {
     next();
 });
 
-const {client_secret, client_id, redirect_uris} = keys.installed;
-
-// client = new google.auth.OAuth2(
-//   keys.client_id,
-//   keys.client_secret,
-//   keys.redirect_uris
-// );
-
-// const authorizeUrl = client.generateAuthUrl({
-//   access_type: 'offline',
-//   scope: SCOPES,
-// });
-
-
-
 //Routes
-app.use("/hello",(req,res,next)=>{
-    console.log("hello");
-    res.send("Hello ");
-});
-
 app.get('/oauth2callback', (req, res) => {
   const code = req.query.code;
   client.getToken(code, (err, tokens) => {
@@ -62,10 +43,8 @@ app.get('/oauth2callback', (req, res) => {
   });
 });
 
+//return the list of files
 app.get("/files",(req,res,next)=>{
-    //return the list of files
-    // drive.listFiles();
-
     checkAccessToken(drive.listFiles,(resData)=>{
       let files = [];
       resData.map((file) =>{
@@ -79,12 +58,9 @@ app.get("/files",(req,res,next)=>{
         files
       })
     });
-    
-    // drive.onInit(drive.listFiles, ()=>{
-    //   res.status(200).json("successfull");
-    // });
 });
 
+//download a file
 app.get("/files/:file_id",(req,res,next)=>{
   const fileID = req.params.file_id;
   console.log(fileID);
@@ -97,15 +73,12 @@ app.get("/files/:file_id",(req,res,next)=>{
       }
   });
   });
-  //call Download function with the fileID
 });
 
 
 app.get("/chunks/:filename", (req,res,next)=>{
   const filename = req.params.filename;
   chunk.chunking(filename,(chunk_arr,chunk_hash)=>{
-    // console.log(chunk_arr);
-    // console.log(chunk_hash);
     res.status(200).json({
       chunks: chunk_arr,
       hash: chunk_hash
@@ -113,13 +86,10 @@ app.get("/chunks/:filename", (req,res,next)=>{
   });
 });
 
-// app.get("/",(req,res,next)=>{
-//     //fetch list of files
-// });
-
 
 //functions 
 function checkAccessToken(callback,fileID,cb){
+  const {client_secret, client_id, redirect_uris} = keys.installed;
   const oAuth2Client = new google.auth.OAuth2(
     client_id, client_secret, redirect_uris[0]
   );
