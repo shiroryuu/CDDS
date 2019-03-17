@@ -37,8 +37,8 @@ function downloadFiles(auth,fileId,cb){
     let dest = fs.createWriteStream(filepath);
     drive.files.get({
         auth: auth,
-        fileId: fileId,
-        alt: 'media'
+        fileId: fileId
+        // alt: 'media'
     },{responseType: 'stream'},
     function(err, res){
       console.log(res);
