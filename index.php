@@ -40,14 +40,43 @@
           <!--li class="nav-item"><a class="nav-link" href="#section-reviews">Reviews</a></li>
           <li class="nav-item"><a class="nav-link" href="#section-pricing">Pricing</a></li>
           <li class="nav-item"><a class="nav-link" href="#section-faq">FAQ</a></li-->
-          <li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" href="#"><span class="pb_rounded-4 px-4">Login</span></a></li>
+          <li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" data-toggle="modal" data-target="#myModal"><span class="pb_rounded-4 px-4">Login</span></a></li>
         </ul>
       </div>
     </div>
   </nav>
   <!-- END nav -->
+<!-- Modal Login-->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
 
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Login</h4>
+      </div>
+      <div class="modal-body">
+        <form action="" class="bg-white rounded pb_form_v1" method="POST" id="loginform">
+            <div class="form-group">
+              <input type="text" class="form-control pb_height-50 reverse" placeholder="Email" name="email">
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control pb_height-50 reverse" placeholder="Password" name="password">
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue">
+            </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
 
+  </div>
+</div>
+<!--End Modal Login-->
 
 
   <section class="pb_cover_v3 overflow-hidden cover-bg-indigo cover-bg-opacity text-left pb_gradient_v1 pb_slant-light" id="section-home">
@@ -86,7 +115,7 @@
               </div>
             </div>
             <div class="form-group">
-              <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="Register" name="submit1">
+              <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue">
             </div>
           </form>
 

@@ -4,7 +4,7 @@ session_start();
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
-define('DB_DATABASE', 'CHDD');
+define('DB_DATABASE', 'chdd');
 define('SITE_NAME', 'CHDD');
 define("BASE_URL", "http://localhost/CHDD/");
 

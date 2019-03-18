@@ -6,7 +6,7 @@ class userClass
 	{
 		try{
 			$db = getDB();
-			$st = $db->prepare("SELECT id FROM users WHERE email=:email");
+			$st = $db->prepare("SELECT `id` FROM users WHERE email=:email");
 			$st->bindParam("email", $email,PDO::PARAM_STR);
 			$st->execute();
 			$count=$st->rowCount();
@@ -21,6 +21,7 @@ class userClass
 				$st1->execute();
 				$uid=$db1->lastInsertId(); // Last inserted row id
 				$_SESSION['id']=$uid;
+				return $count;
 			}
 			else {
 				return $count;
@@ -31,24 +32,23 @@ class userClass
 	}
 }
 
-public function userLogin($password,$username)
+public function userLogin($email,$password)
 {
 	try{
 		$db = getDB();
 			$hash_password= hash('sha256', $password); //Password encryption 
-			$stmt = $db->prepare("SELECT uid,stat FROM users WHERE username=:username AND pass=:hash_password"); 
-			$stmt->bindParam("username", $username,PDO::PARAM_STR) ;
+			$stmt = $db->prepare("SELECT `id` FROM users WHERE email=:email AND password=:hash_password"); 
+			$stmt->bindParam("email", $email,PDO::PARAM_STR) ;
 			$stmt->bindParam("hash_password", $hash_password,PDO::PARAM_STR) ;
 			$stmt->execute();
 			$count=$stmt->rowCount();
 			$data=$stmt->fetch(PDO::FETCH_OBJ);
-			$db = null;
-			if(($count==1)&&($data->stat!='No')){
-				$_SESSION['uid']=$data->uid; // Storing user session value
-				return true;
+			if($count==1){
+				$_SESSION['id']=$data->id; // Storing user session value
+				return $count;
 			}
 			else{
-				return false;
+				return $count;
 			} 
 		}
 		catch(PDOException $e) {

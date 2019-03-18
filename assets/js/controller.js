@@ -9,8 +9,12 @@ $("#signupform").submit(function(e) {
            {
               console.log(data);
                if(data==0){
+                  alert('Success!');
+                  window.location =window.location.href+"user/";
+               }else if(data==1){
                   alert('Email Already exists!');
-               }else{
+               }
+               else{
                     alert('Unknown Error');
                }
            }
@@ -30,7 +34,9 @@ $("#loginform").submit(function(e) {
            {
               console.log(data);
                if(data==0){
-                  alert('Email does not exists!');
+                  alert('Email or password is incorrect!');
+               }if(data==1){
+                  window.location =window.location.href+"user/";
                }else{
                     alert('Unknown Error');
                }
