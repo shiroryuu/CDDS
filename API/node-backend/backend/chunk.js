@@ -18,6 +18,7 @@ function chunking(filename, callback){
 
     stream.on("error", err =>{
         return cb(err);
+        //console.log(err);
     });
 
     stream.on("data", chunk =>{
