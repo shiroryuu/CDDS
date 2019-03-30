@@ -77,8 +77,9 @@ app.get("/files",(req,res,next)=>{
 });
 
 
-app.get("/upload",(req,res,next)=>{
-  checkAccessToken(drive.uploadFile,'testfile')
+app.get("/upload/:filename" ,(req,res,next)=>{
+  const filename = req.params.filename;
+  checkAccessToken(drive.uploadFile,filename)
 })
 //download a file
 app.get("/files/:file_id",(req,res,next)=>{
