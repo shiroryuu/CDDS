@@ -8,4 +8,4 @@ notifications.php
 settings.php
 storage.php
 archive
-token.json
+API/node-backend/token.json
