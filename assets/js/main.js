@@ -220,7 +220,7 @@ $(document).ready(function($) {
 
 var uploader = new plupload.Uploader({
   browse_button: 'browse',
-  url: '../controllers/dataController.php'
+  url: '../controllers/uploadController.php'
 });
  
 uploader.init();
