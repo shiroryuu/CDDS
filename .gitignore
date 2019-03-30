@@ -1,7 +1,6 @@
 package-lock.json
 node_modules
 /test
-drive.js
 test.rar
 archive
 Files
@@ -9,3 +8,4 @@ notifications.php
 settings.php
 storage.php
 connect.php
+archive

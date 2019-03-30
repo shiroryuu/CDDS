@@ -2,6 +2,9 @@ const fs = require('fs');
 const {google} = require('googleapis');
 const path = require('path');
 const uuid = require('uuid');
+const mmm = require('mmmagic'), Magic = mmm.Magic;
+
+const mime = new Magic(mmm.MAGIC_MIME_TYPE);
 
 const FILES_PATH = path.join(__dirname,'./Files');
   
@@ -88,5 +91,45 @@ function downloadFiles(auth,fileId,cb){
     });
 }
 
+function uploadFile(auth,filename) {
+  const drive = google.drive('v3');
+  console.log(filename);
+  const filepath = path.join(FILES_PATH,filename);
 
-module.exports = { listFiles,downloadFiles }
+  mime.detectFile(filepath, (err,res)=>{
+    if (err) throw err;
+    console.log(res);
+    const mediaType = {
+      mimeType: res,
+      body: fs.createReadStream(filepath)
+    };
+    const filesize = getFilesizeInBytes(filepath)/(1024*1024);
+    if (filesize>100){
+      //use Resumeable Upload
+    }
+    else {
+      drive.files.create({
+        auth,
+        resource: {
+          'title': `${filename}`,
+        },
+        media: mediaType,
+        fields: 'id'
+      },(err,file)=>{
+        if (err) throw err;
+        console.log(file["data"].id);
+        // console.log('File id',file.id);
+      });    
+    }
+  });
+}
+
+// file shortcut function
+
+function getFilesizeInBytes(filename) {
+  var stats = fs.statSync(filename)
+  var fileSizeInBytes = stats["size"]
+  return fileSizeInBytes
+}
+
+module.exports = { listFiles,downloadFiles,uploadFile }
