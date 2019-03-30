@@ -91,7 +91,7 @@ function downloadFiles(auth,fileId,cb){
     });
 }
 
-function uploadFile(auth,filename) {
+function uploadFile(auth,filename,cb) {
   const drive = google.drive('v3');
   console.log(filename);
   const filepath = path.join(FILES_PATH,filename);
@@ -117,8 +117,8 @@ function uploadFile(auth,filename) {
         fields: 'id'
       },(err,file)=>{
         if (err) throw err;
-        console.log(file["data"].id);
-        // console.log('File id',file.id);
+        // console.log(file["data"].id);
+        return cb(file["data"].id);
       });    
     }
   });

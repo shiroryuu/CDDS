@@ -17,8 +17,8 @@ function chunking(filename, callback){
     let stream = fs.createReadStream(file, { highWaterMark: 1024*1024 });
 
     stream.on("error", err =>{
-        return cb(err);
-        //console.log(err);
+        // return cb(err);
+        console.log(err);
     });
 
     stream.on("data", chunk =>{
