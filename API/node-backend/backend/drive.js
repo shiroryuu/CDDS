@@ -95,7 +95,7 @@ function uploadFile(auth,filename,cb) {
   const drive = google.drive('v3');
   console.log(filename);
   const filepath = path.join(FILES_PATH,filename);
-
+  console.log(filepath);
   mime.detectFile(filepath, (err,res)=>{
     if (err) throw err;
     console.log(res);
