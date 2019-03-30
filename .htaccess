@@ -1,10 +1,5 @@
-#RewriteEngine On 
-#RewriteBase /
-
-# Redirect .php URLs to rewritten URLs
-#RewriteCond %{REQUEST_FILENAME} !-f 
-#RewriteRule ^(.+)\.php$ $1 [L,QSA,R=301]
-
-# Rewrite URLs for processing by router (index.php)
-#RewriteCond %{REQUEST_FILENAME} !-f 
-#RewriteRule ^(.+)$ index.php?url=$1 [QSA,L,NC]
+Options +MultiViews
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
