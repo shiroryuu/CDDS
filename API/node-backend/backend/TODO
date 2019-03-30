@@ -1,1 +1,2 @@
 Switch from js-sha1 to inbuilt crypto module.
+Seperate the check-Auth to Middleware

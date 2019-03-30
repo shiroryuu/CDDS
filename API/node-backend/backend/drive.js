@@ -111,7 +111,7 @@ function uploadFile(auth,filename,cb) {
       drive.files.create({
         auth,
         resource: {
-          'title': `${filename}`,
+          'name': `${filename}`,
         },
         media: mediaType,
         fields: 'id'
