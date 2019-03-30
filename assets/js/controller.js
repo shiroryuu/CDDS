@@ -10,7 +10,7 @@ $("#signupform").submit(function(e) {
               console.log(data);
                if(data==0){
                   alert('Success!');
-                  window.location =window.location.href+"user/";
+                  window.location ="/CHDD/user/";
                }else if(data==1){
                   alert('Email Already exists!');
                }
@@ -36,7 +36,7 @@ $("#loginform").submit(function(e) {
                if(data==0){
                   alert('Email or password is incorrect!');
                }if(data==1){
-                  window.location =window.location.href+"user/";
+                  window.location ="/CHDD/user/";
                }else{
                     alert('Unknown Error');
                }

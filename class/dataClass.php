@@ -2,15 +2,15 @@
 
 class dataClass{
 
-	public class genHash(){
+	public function genHash(){
 
 	}
 	
-	public class pushData(){
+	public function pushData(){
 
 	}
 	
-	public class pullData(){
+	public function pullData(){
 
 	}
 
