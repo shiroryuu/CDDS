@@ -179,6 +179,23 @@ public function userLogin($email,$password)
 		echo '{"error":{"text":'. $e->getMessage() .'}}';
 	}
 }
+	public function getUserIDS()	{
+		try{
+			$db = getDB();
+			$stmt = $db->prepare("SELECT `id` FROM users");
+			$stmt->execute();
+			$data=$stmt->fetchALL(PDO::FETCH_OBJ);
+			$data=$data->id;
+			return $data;
+			$db = null;
+			 
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+
+	}
+
 }
 
 ?>

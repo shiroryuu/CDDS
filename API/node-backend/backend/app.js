@@ -106,20 +106,6 @@ app.get("/chunks/:filename", (req,res,next)=>{
   });
 });
 
-app.get("/connect", (req,res,next)=>{
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    // if (err) return getAccessToken(oAuth2Client, callback);
-    if (err){
-      res.status(200).json({
-     message: "successfull" 
-    });
-      return getAccessToken();
-      
-    } 
-    oAuth2Client.setCredentials(JSON.parse(token));
-  });
-});
-
 //functions 
 function checkAccessToken(callback,fileID,cb){  
   fs.readFile(TOKEN_PATH, (err, token) => {
