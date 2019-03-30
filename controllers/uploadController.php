@@ -28,8 +28,33 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 //grab URL and pass it to the variable. 
 curl_setopt($ch, CURLOPT_URL, $url); 
   
-$result = curl_exec($ch); 
+$result = curl_exec($ch);
+$result=json_decode($result);  
+$result=$result->hash;   
+/***File Hashing ends***/  
+$bool=$dataClass->checkHash($result,$_SESSION['uid']);  
+
+if($bool){
+	//upload file Starts
+	// From URL to get webpage contents. 
+	$url = "http://localhost:3000/upload/".$filename; 
   
-echo $result;  
+	// Initialize a CURL session. 
+	$ch = curl_init();  
+  
+	// Return Page contents. 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+  
+	//grab URL and pass it to the variable. 
+	curl_setopt($ch, CURLOPT_URL, $url); 
+  
+	$response = curl_exec($ch);
+	$response=json_decode($response);     
+/***File Hashing ends***/  
+
+
+}else{
+	//upload database
+}
 
 ?>

@@ -30,7 +30,8 @@ function chunking(filename, callback){
         // console.log(`The hash of array is ${sha1(chunks)}`);
         // console.log(chunks);
         // console.log(`Total chunks is ${chunks.length}`);
-        return callback(chunks,sha1(chunks));
+        //return callback(chunks,sha1(chunks));
+        return callback(sha1(chunks));
     });
 }
 
