@@ -40,7 +40,6 @@ app.use((req,res,next) => {
 });
 
 //Routes
-
 app.get('/oauthcallback', (req, res) => {
   const code = req.query.code;
   console.log(code);
@@ -79,8 +78,13 @@ app.get("/files",(req,res,next)=>{
 
 app.get("/upload/:filename" ,(req,res,next)=>{
   const filename = req.params.filename;
-  checkAccessToken(drive.uploadFile,filename)
+  checkAccessToken(drive.uploadFile,filename, fileID=>{
+    res.status(200).json({
+      fileid: fileID
+    });
+  });
 })
+
 //download a file
 app.get("/files/:file_id",(req,res,next)=>{
   const fileID = req.params.file_id;
@@ -103,20 +107,6 @@ app.get("/chunks/:filename", (req,res,next)=>{
       chunks: chunk_arr,
       hash: chunk_hash
     });
-  });
-});
-
-app.get("/connect", (req,res,next)=>{
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    // if (err) return getAccessToken(oAuth2Client, callback);
-    if (err){
-      res.status(200).json({
-     message: "successfull" 
-    });
-      return getAccessToken();
-      
-    } 
-    oAuth2Client.setCredentials(JSON.parse(token));
   });
 });
 
