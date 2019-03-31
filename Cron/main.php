@@ -10,21 +10,58 @@ $dataClass = new dataClass();
 //get ID of all users
 $uid=$userClass->getUserIDS();
 
-foreach ($uid as $id) {
-	$url = "http://localhost:3000/files";  
-	$ch = curl_init();   
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-	curl_setopt($ch, CURLOPT_URL, $url); 
-	$results = curl_exec($ch); 
-  	$results = json_decode($results);
+foreach ($uid as $mid) {
+  $id=$mid->id;
+	//Get Filemeta of the user
+  $results=$dataClass->getFileMeta($id);
 
-  	foreach ($results as $result) {
-  		if($result->mimeType="application/vnd.google-apps.folder"){
-  			break;
-  		}else{
-  			
-  		}
-  	}
+ //Process Each file
+  foreach ($results as $key) {
+    foreach ($key as $result) {
+      if($result->mimeType!="application/vnd.google-apps.folder"){
+        $fid=$result->id;
+
+    //check if file has been processed
+        $data=$dataClass->checkFilebyID($fid,$id);
+
+    if($data=-1){ //if file not processed 
+
+    //start file download
+      $fileNamearr=$dataClass->pullData($fid);
+      if($fileNamearr[1]){
+        $fileName=$fileNamearr[0];
+    //Gen Hash
+        if($hash=$dataClass->genHash($fileName)){
+    //Check if Hash exists    
+      $bool=$dataClass->checkHash($hash,$id);  
+        }
+      }
+
+    if($bool==1){//if hash not
+      $dp=0;
+    }else{// if hash present (Duplicate Found)
+
+      //Delete File on Server Pending
+      $fid=$bool['sid'];
+      $dp=$bool['id'];
+    }
+    //update database
+    if($dataClass->pushFileInfo($id,$fileName,$hash,$fid,$dp)){
+      $fid=NULL;
+      $data=NULL;
+      $fileName=NULL;
+      $hash=NULL;
+      $id=NULL;
+      $bool=NULL;
+      $dp=NULL;
+      $fileNamearr=NULL;
+    }
+  }
+    }else{ //if file processed
+      //Batch File for processing
+    }
+  }
+}
 
 }
 

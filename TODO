@@ -1,0 +1,15 @@
+1) Switch from js-sha1 to inbuilt crypto module.
+2) Seperate the check-Auth to Middleware/Connect with Storage
+3) Google Drive File Download format
+4) Save token generated to Database
+5) Dynamically apply token of user from Database
+6) Require File Size and time modified to be fetched in Meta Data
+
+7) Need cosmetics on array generated when file meta data is fetched
+Example: {"files":[{"name":"TEST file","id":"1TulxfNj6Ugq5nWk0eugGKChtdzyyyEnxD_ygqu0H3lo","mimeType":"application/vnd.google-apps.document"},{"name":"test folder file","id":"17lVqar7-U3oqBu_Flv-iqe5ky0roL_g9rZtzSRm5L38","mimeType":"application/vnd.google-apps.document"}]}
+Remove "files": in the begining
+
+Known Issues
+API Rate limiting
+Processing on existing FileID
+Download File name

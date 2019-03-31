@@ -185,7 +185,6 @@ public function userLogin($email,$password)
 			$stmt = $db->prepare("SELECT `id` FROM users");
 			$stmt->execute();
 			$data=$stmt->fetchALL(PDO::FETCH_OBJ);
-			$data=$data->id;
 			return $data;
 			$db = null;
 			 
