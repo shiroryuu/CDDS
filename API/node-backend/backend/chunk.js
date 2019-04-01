@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const sha1 = require ('js-sha1');
+const crypto = require('crypto');
 
 
 var location = path.join("backend/Files");
@@ -15,6 +15,7 @@ function chunking(filename, callback){
     let chunks = [];
     let file = location+'/'+filename;
     let stream = fs.createReadStream(file, { highWaterMark: 1024*1024 });
+    let hash = crypto.createHash('sha1');
 
     stream.on("error", err =>{
         // return cb(err);
@@ -22,16 +23,12 @@ function chunking(filename, callback){
     });
 
     stream.on("data", chunk =>{
-        // console.log(sha1(chunk));
-        chunks.push(sha1(chunk));
+        hash.update(chunk);
     });
     
     stream.on("end", ()=>{
-        // console.log(`The hash of array is ${sha1(chunks)}`);
-        // console.log(chunks);
-        // console.log(`Total chunks is ${chunks.length}`);
-        //return callback(chunks,sha1(chunks));
-        return callback(sha1(chunks));
+        // const finalhash = hash.digest('hex');
+        return callback(hash.digest('hex'));
     });
 }
 

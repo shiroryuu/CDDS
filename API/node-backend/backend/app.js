@@ -75,7 +75,6 @@ app.get("/files",(req,res,next)=>{
     });
 });
 
-
 app.get("/upload/:filename" ,(req,res,next)=>{
   const filename = req.params.filename;
   checkAccessToken(drive.uploadFile,filename, fileID=>{
@@ -91,20 +90,19 @@ app.get("/files/:file_id",(req,res,next)=>{
   console.log(fileID);
   checkAccessToken(drive.downloadFiles,fileID,(resData)=>{
     res.status(200).json({
-      //message: "successfull",
-      //file: {
-        name: resData.filename
-        //path: resData.filepath
-      //}
+      message: "successfull",
+      file: {
+        name: resData.filename,
+        path: resData.filepath
+      }
   });
   });
 });
 
 app.get("/chunks/:filename", (req,res,next)=>{
   const filename = req.params.filename;
-  chunk.chunking(filename,(chunk_arr,chunk_hash)=>{
+  chunk.chunking(filename,(chunk_hash)=>{
     res.status(200).json({
-      chunks: chunk_arr,
       hash: chunk_hash
     });
   });
