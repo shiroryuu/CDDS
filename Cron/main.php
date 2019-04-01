@@ -14,7 +14,6 @@ foreach ($uid as $mid) {
   $id=$mid->id;
 	//Get Filemeta of the user
   $results=$dataClass->getFileMeta($id);
-
  //Process Each file
   foreach ($results as $key) {
     foreach ($key as $result) {
@@ -23,11 +22,11 @@ foreach ($uid as $mid) {
 
     //check if file has been processed
         $data=$dataClass->checkFilebyID($fid,$id);
-
     if($data=-1){ //if file not processed 
 
     //start file download
       $fileNamearr=$dataClass->pullData($fid);
+      sleep(30);
       if($fileNamearr[1]){
         $fileName=$fileNamearr[0];
     //Gen Hash
