@@ -5,6 +5,7 @@ const readline = require('readline');
 const fs = require('fs');
 const opn  = require('opn');
 
+const checkAuth = require('./middleware/check-auth');
 const drive = require('./drive');
 const chunk = require('./chunk');
 const app = express();
@@ -59,9 +60,11 @@ app.get('/oauthcallback', (req, res) => {
 });
 
 //return the list of files
-app.get("/files",(req,res,next)=>{
-    checkAccessToken(drive.listFiles,(resData)=>{
-      let files = [];
+app.get("/files",checkAuth,(req,res,next)=>{
+// app.get("/files",(req,res,next)=>{
+  
+  drive.listFiles(req.authClient,(resData)=>{
+    let files = [];
       resData.map((file) =>{
         files.push({
               name: file.name,
@@ -71,8 +74,21 @@ app.get("/files",(req,res,next)=>{
       });
       res.status(200).json({
         files
-      })
-    });
+      });
+  });
+    // checkAccessToken(drive.listFiles,(resData)=>{
+    //   let files = [];
+    //   resData.map((file) =>{
+    //     files.push({
+    //           name: file.name,
+    //           id: file.id,
+    //           mimeType: file.mimeType
+    //         });
+    //   });
+    //   res.status(200).json({
+    //     files
+    //   })
+    // });
 });
 
 app.get("/upload/:filename" ,(req,res,next)=>{
