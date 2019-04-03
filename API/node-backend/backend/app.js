@@ -10,7 +10,7 @@ const chunk = require('./chunk');
 const app = express();
 
 
-const TOKEN_PATH = 'token.json';
+const TOKEN_PATH = path.join(__dirname,'../','token.json');
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 
 const keyfile = path.join(__dirname, 'credentials.json');
