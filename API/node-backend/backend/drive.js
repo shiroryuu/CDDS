@@ -46,14 +46,16 @@ function downloadFiles(auth,fileId,cb){
     const filepath = path.join(FILES_PATH, filename);
     let dest = fs.createWriteStream(filepath);
     searchMimeType(auth,fileId,(result)=>{
-      const mimeType = result.data.mimeType.split('/')[1].startsWith("vnd.google-apps");
-      console.log(mimeType);
-      if (mimeType){
+      // const mimeType = result.data.mimeType.split('/')[1].startsWith("vnd.google-apps");
+      const isGSuiteApp = result.data.mimeType.split('/')[1].startsWith("vnd.google-apps");
+      const GSuiteAppName = result.data.mimeType.split('/')[1].split('.')[2];
+      console.log(isGSuiteApp);
+      if (isGSuiteApp){
         //download docs
         drive.files.export({
           auth: auth,
           fileId:fileId,
-          mimeType: 'application/pdf'
+          mimeType: GSuiteAppName === 'document'||'spreadsheet'?'text/plain':'application/pdf'
         },{responseType: 'stream'},
         function(err,res){
           res.data
