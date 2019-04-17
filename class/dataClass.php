@@ -9,7 +9,7 @@ class dataClass{
 		curl_setopt($ch, CURLOPT_URL, $url); 
 		$result = curl_exec($ch);  
 		$result=json_decode($result);  
-		return $result->chunks;
+		return $result->hash;
 	}
 
 	public function pushData($filename){

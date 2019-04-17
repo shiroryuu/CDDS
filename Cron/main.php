@@ -26,7 +26,7 @@ foreach ($uid as $mid) {
 
     //start file download
       $fileNamearr=$dataClass->pullData($fid);
-      sleep(30);
+      sleep(1);
       if($fileNamearr[1]){
         $fileName=$fileNamearr[0];
     //Gen Hash

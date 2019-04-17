@@ -90,11 +90,7 @@ app.get("/files/:file_id",(req,res,next)=>{
   console.log(fileID);
   checkAccessToken(drive.downloadFiles,fileID,(resData)=>{
     res.status(200).json({
-      message: "successfull",
-      file: {
-        name: resData.filename,
-        path: resData.filepath
-      }
+        name: resData.filename
   });
   });
 });
