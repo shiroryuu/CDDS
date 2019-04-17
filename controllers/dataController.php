@@ -35,7 +35,7 @@ foreach ($uid as $mid) {
         if($hash=$dataClass->genHash($fileName)){
         //Check if Hash exists    
           $bool=$dataClass->checkHash($hash,$id);
-          $file=BASE_URL."API/node-backend/backend/Files/".$fileName;  
+          $file="../API/node-backend/backend/Files/".$fileName;  
           $fileSize=$dataClass->getFileSize($file);
         }
       }

@@ -313,10 +313,8 @@ class userClass
 	public function getData($uid){
 		try{
 			$db = getDB();
-			$zero=0;
-			$stmt = $db->prepare("SELECT SUM(fsize) as `dp` FROM `hashs` WHERE (uid=:uid AND duplicate=:zero)"); 
+			$stmt = $db->prepare("SELECT SUM(fsize) as `dp` FROM `hashs` WHERE (uid=:uid)"); 
 			$stmt->bindParam("uid", $uid,PDO::PARAM_INT);
-			$stmt->bindParam("zero", $zero,PDO::PARAM_INT);
 			$stmt->execute();
 			$data = $stmt->fetch(PDO::FETCH_OBJ); //User data
 			return $data;
@@ -347,6 +345,20 @@ class userClass
 			$stmt = $db->prepare("SELECT id FROM users"); 
 			$stmt->execute();
 			$data = $stmt->fetchALL(PDO::FETCH_OBJ); //User data
+			return $data;
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
+	public function getUserInfo($sessionid){
+		try{
+			$db = getDB();
+			$stmt = $db->prepare("SELECT name,email,type FROM users WHERE id=:sessionid"); 
+			$stmt->bindParam("sessionid", $sessionid,PDO::PARAM_INT);
+			$stmt->execute();
+			$data = $stmt->fetch(PDO::FETCH_OBJ); //User data
 			return $data;
 		}
 		catch(PDOException $e) {
