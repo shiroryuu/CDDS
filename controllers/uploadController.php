@@ -10,6 +10,7 @@ if (empty($_FILES) || $_FILES["file"]["error"]) {
 	  die('{"OK": 0}');
 }
 $fileName = $_FILES["file"]["name"];
+$fileSize = $_FILES["file"]["size"]; 
 if(copy($_FILES["file"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/".SITE_NAME."/API/node-backend/backend/Files/$fileName")){
 //File upload ends
 chmod($_SERVER['DOCUMENT_ROOT']."/".SITE_NAME."/API/node-backend/backend/Files/$fileName",0755);
@@ -27,7 +28,7 @@ if($bool==1){
 	$dp=$bool['id'];
 }
 //update database
-	$dataClass->pushFileInfo($_SESSION['uid'],$fileName,$result,$fid,$dp);
+	$dataClass->pushFileInfo($_SESSION['uid'],$fileName,$result,$fid,$dp,$fileSize);
 die('{"OK": 1}');
 }
 die('{"OK": -1}');
