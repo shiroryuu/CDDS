@@ -9,7 +9,7 @@ class dataClass{
 		curl_setopt($ch, CURLOPT_URL, $url); 
 		$result = curl_exec($ch);  
 		$result=json_decode($result);  
-		return $result->chunks;
+		return $result->hash;
 	}
 
 	public function pushData($filename){
@@ -59,15 +59,16 @@ class dataClass{
 	}
 	}
 
-	public function pushFileInfo($session,$filename,$result,$fid,$dp){
+	public function pushFileInfo($session,$filename,$result,$fid,$dp,$fileSize){
 		try{
 			$db = getDB();
-			$st = $db->prepare("INSERT INTO `hashs` (filename,uid,hash,sid,duplicate) VALUES (:filename,:session,:result,:fid,:dp)");
+			$st = $db->prepare("INSERT INTO `hashs` (filename,uid,hash,sid,duplicate,fsize) VALUES (:filename,:session,:result,:fid,:dp,:fileSize)");
 			$st->bindParam("filename", $filename,PDO::PARAM_STR);
 			$st->bindParam("session", $session,PDO::PARAM_STR);
 			$st->bindParam("result", $result,PDO::PARAM_STR);
 			$st->bindParam("fid", $fid,PDO::PARAM_STR);
 			$st->bindParam("dp", $dp,PDO::PARAM_STR);
+			$st->bindParam("fileSize", $fileSize,PDO::PARAM_STR);
 			$st->execute();
 		}
 	catch(PDOException $e) {
@@ -107,6 +108,66 @@ class dataClass{
 	catch(PDOException $e) {
 		echo '{"error":{"textreg":'. $e->getMessage() .'}}'; 
 	}
+	}
+
+	public function fetchUserFiles($sessionid){
+		try{
+			$db = getDB();
+			$st = $db->prepare("SELECT `filename`,sid,uploadtime FROM `hashs` WHERE (uid=:uid)");
+			$st->bindParam("uid", $sessionid,PDO::PARAM_INT);
+			$st->execute();
+			$data=$st->fetchALL(PDO::FETCH_OBJ);
+			return $data;
+		}
+	catch(PDOException $e) {
+		echo '{"error":{"textreg":'. $e->getMessage() .'}}'; 
+	}
+	}
+
+	public function fetchRecentUserFiles($sessionid){
+		try{
+			$db = getDB();
+			$st = $db->prepare("SELECT `filename`,sid,uploadtime FROM `hashs` WHERE (uid=:uid) ORDER BY uploadtime DESC LIMIT 4");
+			$st->bindParam("uid", $sessionid,PDO::PARAM_INT);
+			$st->execute();
+			$data=$st->fetchALL(PDO::FETCH_OBJ);
+			return $data;
+		}
+	catch(PDOException $e) {
+		echo '{"error":{"textreg":'. $e->getMessage() .'}}'; 
+	}
+	}
+	public function convertBytes($bytes)
+	{
+		 if ($bytes >= 1073741824)
+        {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        }
+        elseif ($bytes >= 1048576)
+        {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        }
+        elseif ($bytes >= 1024)
+        {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        }
+        elseif ($bytes > 1)
+        {
+            $bytes = $bytes . ' bytes';
+        }
+        elseif ($bytes == 1)
+        {
+            $bytes = $bytes . ' byte';
+        }
+        else
+        {
+            $bytes = '0 bytes';
+        }
+
+        return $bytes;
+	}
+	public function getFileSize($file){
+		return filesize($file);
 	}
 }
 

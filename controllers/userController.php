@@ -26,6 +26,13 @@ elseif(isset($_POST['password'])){
 		echo $response;	
 	}
 	
+}elseif (isset($_POST['oldpass'])) {
+	$oldpass=$_POST['oldpass'];
+	$newpass=$_POST['newpass'];
+
+	if($response=$userClass->updatePasswordUser($_SESSION['uid'],$oldpass,$newpass)){
+		echo $response;	
+	}
 }
 
 ?>

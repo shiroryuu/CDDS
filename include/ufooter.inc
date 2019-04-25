@@ -72,6 +72,7 @@ document.write(new Date().getFullYear())
 <!--  Plupupload Plugin    -->
 <script type="text/javascript" src="../assets/js/plupload.full.min.js"></script>
 <script src="../assets/js/main.js"></script>
+<script src="../assets/js/controller.js"></script>
 </body>
 
 </html>

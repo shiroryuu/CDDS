@@ -5,14 +5,14 @@ $session_uid=$_SESSION['uid'];
 include('../class/userClass.php');
 include('../class/dataClass.php');
 $userClass = new userClass();
-$orderClass = new dataClass();
+$dataClass = new dataClass();
 }
 if(!empty($_SESSION['aid'])){
 $session_uid=NULL;	
 $session_aid=$_SESSION['aid'];
 include('../class/dataClass.php');
 include('../class/adminClass.php');
-$orderClass = new dataClass();
+$dataClass = new dataClass();
 $adminClass = new adminClass();
 }
 if(empty($session_uid)){

@@ -27,15 +27,15 @@ class userClass
 				return $count;
 			}
 		}
-	catch(PDOException $e) {
-		echo '{"error":{"textreg":'. $e->getMessage() .'}}'; 
+		catch(PDOException $e) {
+			echo '{"error":{"textreg":'. $e->getMessage() .'}}'; 
+		}
 	}
-}
 
-public function userLogin($email,$password)
-{
-	try{
-		$db = getDB();
+	public function userLogin($email,$password)
+	{
+		try{
+			$db = getDB();
 			$hash_password= hash('sha256', $password); //Password encryption 
 			$stmt = $db->prepare("SELECT `id`,name FROM users WHERE email=:email AND password=:hash_password"); 
 			$stmt->bindParam("email", $email,PDO::PARAM_STR) ;
@@ -174,20 +174,20 @@ public function userLogin($email,$password)
 			$stmt->execute();
 			$data = $stmt->fetch(PDO::FETCH_OBJ); //User data
 			return $data;
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
 	}
-	catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}';
-	}
-}
-	public function getUserIDS()	{
+	public function 	nfo($sessionid)	{
 		try{
 			$db = getDB();
-			$stmt = $db->prepare("SELECT `id` FROM users");
+			$stmt = $db->prepare("SELECT name,email,type FROM users WHERE id=:sessionid");
+			$stmt->bindParam("sessionid", $sessionid,PDO::PARAM_INT);
 			$stmt->execute();
-			$data=$stmt->fetchALL(PDO::FETCH_OBJ);
+			$data=$stmt->fetch(PDO::FETCH_OBJ);
 			return $data;
-			$db = null;
-			 
+
 		}
 		catch(PDOException $e) {
 			echo '{"error":{"text":'. $e->getMessage() .'}}';
@@ -195,6 +195,178 @@ public function userLogin($email,$password)
 
 	}
 
+	public function updateEmailUser($sessionid,$data){
+		try{
+			$db2 = getDB();	
+			$stmt = $db2->prepare("UPDATE users SET email=:data WHERE id=:sessionid"); 
+			$stmt->bindParam("sessionid", $sessionid,PDO::PARAM_INT);
+			$stmt->bindParam("data", $data,PDO::PARAM_STR);
+			if($stmt->execute()){
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
+	public function updateNameUser($sessionid,$data){
+		try{
+			$db2 = getDB();	
+			$stmt = $db2->prepare("UPDATE users SET name=:data WHERE id=:sessionid"); 
+			$stmt->bindParam("sessionid", $sessionid,PDO::PARAM_INT);
+			$stmt->bindParam("data", $data,PDO::PARAM_STR);
+			if($stmt->execute()){
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
+	public function updateTypeUser($sessionid,$data){
+		try{
+			$db2 = getDB();	
+			$stmt = $db2->prepare("UPDATE users SET type=:data WHERE id=:sessionid"); 
+			$stmt->bindParam("sessionid", $sessionid,PDO::PARAM_INT);
+			$stmt->bindParam("data", $data,PDO::PARAM_STR);
+			if($stmt->execute()){
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
+	public function updatePasswordUser($sessionid,$oldpass,$newpass){
+		try{
+			$db = getDB();
+			$hash_password=hash('sha256', $oldpass);
+			$stmt = $db->prepare("SELECT `id` FROM users WHERE (`id`=:sessionid AND password=:hash_password)"); 
+			$stmt->bindParam("sessionid", $sessionid,PDO::PARAM_INT);
+			$stmt->bindParam("hash_password", $hash_password,PDO::PARAM_STR) ;
+			$stmt->execute();
+			$count=$stmt->rowCount();
+			if($count==1){
+				$hash_password2=hash('sha256', $newpass);
+				$db2 = getDB();
+				$stmt2 = $db2->prepare("UPDATE users SET password=:hash_password WHERE id=:sessionid"); 
+				$stmt2->bindParam("sessionid", $sessionid,PDO::PARAM_INT);
+				$stmt2->bindParam("hash_password", $hash_password,PDO::PARAM_STR) ;
+				$stmt2->execute();
+				return 1;
+			}else{
+				return 0;
+			}
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
+	public function getNoFiles($uid){
+		try{
+			$zero=0;
+			$db = getDB();
+			$stmt = $db->prepare("SELECT count(id) as `nf` FROM hashs WHERE (uid=:uid AND duplicate=:zero)"); 
+			$stmt->bindParam("uid", $uid,PDO::PARAM_INT);
+			$stmt->bindParam("zero", $zero,PDO::PARAM_INT);
+			$stmt->execute();
+			$data = $stmt->fetch(PDO::FETCH_OBJ); //User data
+			return $data;
+		}	
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
+	public function getNoDFiles($uid){
+		try{
+			$db = getDB();
+			$zero=0;
+			$stmt = $db->prepare("SELECT count(id) as `dnf` FROM hashs WHERE (uid=:uid AND duplicate!=:zero)"); 
+			$stmt->bindParam("uid", $uid,PDO::PARAM_INT);
+			$stmt->bindParam("zero", $zero,PDO::PARAM_INT);
+			$stmt->execute();
+			$data = $stmt->fetch(PDO::FETCH_OBJ); //User data
+			return $data;
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
+	public function getData($uid){
+		try{
+			$db = getDB();
+			$stmt = $db->prepare("SELECT SUM(fsize) as `dp` FROM `hashs` WHERE (uid=:uid)"); 
+			$stmt->bindParam("uid", $uid,PDO::PARAM_INT);
+			$stmt->execute();
+			$data = $stmt->fetch(PDO::FETCH_OBJ); //User data
+			return $data;
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
+	public function getDData($uid){
+		try{
+			$db = getDB();
+			$zero=0;
+			$stmt = $db->prepare("SELECT SUM(fsize) as `ddp` FROM `hashs` WHERE (uid=:uid AND duplicate!=:zero)"); 
+			$stmt->bindParam("uid", $uid,PDO::PARAM_INT);
+			$stmt->bindParam("zero", $zero,PDO::PARAM_INT);
+			$stmt->execute();
+			$data = $stmt->fetch(PDO::FETCH_OBJ); //User data
+			return $data;
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+	public function getUserIDS(){
+		try{
+			$db = getDB();
+			$stmt = $db->prepare("SELECT id FROM users"); 
+			$stmt->execute();
+			$data = $stmt->fetchALL(PDO::FETCH_OBJ); //User data
+			return $data;
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
+	public function getUserInfo($sessionid){
+		try{
+			$db = getDB();
+			$stmt = $db->prepare("SELECT name,email,type FROM users WHERE id=:sessionid"); 
+			$stmt->bindParam("sessionid", $sessionid,PDO::PARAM_INT);
+			$stmt->execute();
+			$data = $stmt->fetch(PDO::FETCH_OBJ); //User data
+			return $data;
+		}
+		catch(PDOException $e) {
+			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		}
+	}
+
 }
+
 
 ?>

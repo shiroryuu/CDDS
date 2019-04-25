@@ -23,9 +23,6 @@
     <div class="sidebar" data-color="white" data-active-color="danger">
       <div class="logo">
         <a href="#" class="simple-text logo-mini">
-          <div class="logo-image-small">
-            <img src="../assets/images/logo-small.png">
-          </div>
         </a>
         <a href="#" class="simple-text logo-normal">
           Hey <?php echo $_SESSION['name']; ?>!
@@ -42,12 +39,12 @@
               <p>Home</p>
             </a>
           </li>
-          <li>
+          <!--li>
             <a href="./notifications">
               <i class="nc-icon nc-bell-55"></i>
               <p>Notifications</p>
             </a>
-          </li>
+          </li-->
           <li>
             <a href="./settings">
               <i class="nc-icon nc-single-02"></i>
@@ -108,7 +105,7 @@
                   </p>
                 </a>
               </li>
-              <li class="nav-item btn-rotate dropdown">
+              <!--li class="nav-item btn-rotate dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="nc-icon nc-bell-55"></i>
                 </a>
@@ -118,7 +115,7 @@
                   <a class="dropdown-item" href="#">Lorem Ipsum</a><hr>
                   <a class="dropdown-item" href="notifications">See all notifications</a>
                 </div>
-              </li>
+              </li-->
               <li class="nav-item">
                 <a class="nav-link btn-rotate" href="settings">
                   <i class="nc-icon nc-settings-gear-65"></i>

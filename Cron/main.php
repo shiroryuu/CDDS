@@ -19,41 +19,47 @@ foreach ($uid as $mid) {
     foreach ($key as $result) {
       if($result->mimeType!="application/vnd.google-apps.folder"){
         $fid=$result->id;
+        $ofileName=$result->name;
 
     //check if file has been processed
-        $data=$dataClass->checkFilebyID($fid,$id);
-    if($data=-1){ //if file not processed 
+    $data=$dataClass->checkFilebyID($fid,$id);
+    
+    if($data==-1){ //if file not processed 
 
-    //start file download
+      //start file download
       $fileNamearr=$dataClass->pullData($fid);
-      sleep(30);
+      sleep(1);
       if($fileNamearr[1]){
-        $fileName=$fileNamearr[0];
-    //Gen Hash
+          $fileName=$fileNamearr[0];
+        //Gen Hash
         if($hash=$dataClass->genHash($fileName)){
-    //Check if Hash exists    
-      $bool=$dataClass->checkHash($hash,$id);  
+        //Check if Hash exists    
+          $bool=$dataClass->checkHash($hash,$id);
+          $file="../API/node-backend/backend/Files/".$fileName;  
+          $fileSize=$dataClass->getFileSize($file);
         }
       }
 
     if($bool==1){//if hash not
       $dp=0;
-    }else{// if hash present (Duplicate Found)
+    }else{//if hash present (Duplicate Found)
 
       //Delete File on Server Pending
       $fid=$bool['sid'];
       $dp=$bool['id'];
     }
     //update database
-    if($dataClass->pushFileInfo($id,$fileName,$hash,$fid,$dp)){
+    if($dataClass->pushFileInfo($id,$ofileName,$hash,$fid,$dp,$fileSize)){
       $fid=NULL;
       $data=NULL;
       $fileName=NULL;
+      $ofileName=NULL;
       $hash=NULL;
       $id=NULL;
       $bool=NULL;
       $dp=NULL;
       $fileNamearr=NULL;
+      $fileSize=NULL;
     }
   }
     }else{ //if file processed
