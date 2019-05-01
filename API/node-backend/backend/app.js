@@ -22,6 +22,10 @@ const oAuth2Client = new google.auth.OAuth2(
     keys.web.redirect_uris[0]
 );
 
+const auth_url = oAuth2Client.generateAuthUrl({
+  access_type: 'offline',
+  scope: SCOPES
+})
 // const authUrl = oAuth2Client.generateAuthUrl({
     // access_type: 'offline',
     // scope: SCOPES,
@@ -50,12 +54,24 @@ app.get('/oauthcallback', (req, res) => {
     }
     oAuth2Client.credentials = token;
     console.log(token);
-    res.send('Authentication successful! Please return to the console.');
+    const options = {
+      headers: {
+        'token': token
+      }
+    };
+    // res.send('Authentication successful! Please return to the console.');
+    const frontend_path = path.join(__dirname,'../frontend');
+    res.sendFile(frontend_path+'/oauth_response.html',options);
     fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
         if (err) console.error(err);
         console.log('Token stored to', TOKEN_PATH);
     });
   });
+});
+
+//generate url
+app.get('/oauthurl',(req,res,next) => {
+  res.send(auth_url);
 });
 
 //return the list of files
