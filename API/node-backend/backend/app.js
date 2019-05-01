@@ -11,7 +11,8 @@ const chunk = require('./chunk');
 const app = express();
 
 
-const TOKEN_PATH = 'token.json';
+const TOKEN_PATH = path.join(__dirname,'/../','/token.json');
+// console.log(TOKEN_PATH);
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 
 const keyfile = path.join(__dirname, 'credentials.json');
@@ -44,13 +45,16 @@ app.use((req,res,next) => {
 app.get('/oauthcallback', (req, res) => {
   const code = req.query.code;
   console.log(code);
+  oAuth2Client.getAccessToken();
   oAuth2Client.getToken(code, (err, token) => {
     if (err) {
       console.error('Error getting oAuth tokens:');
       throw err;
     }
     oAuth2Client.credentials = token;
+    // oAuth2Client.setCredentials = token;
     console.log(token);
+    console.log(token.refresh_token);
     res.send('Authentication successful! Please return to the console.');
     fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
         if (err) console.error(err);
@@ -60,11 +64,26 @@ app.get('/oauthcallback', (req, res) => {
 });
 
 //return the list of files
-app.get("/files",checkAuth,(req,res,next)=>{
-// app.get("/files",(req,res,next)=>{
+// app.get("/files",checkAuth,(req,res,next)=>{
   
-  drive.listFiles(req.authClient,(resData)=>{
-    let files = [];
+//   drive.listFiles(req.authClient,(resData)=>{
+//     let files = [];
+//       resData.map((file) =>{
+//         files.push({
+//               name: file.name,
+//               id: file.id,
+//               mimeType: file.mimeType
+//             });
+//       });
+//       res.status(200).json({
+//         files
+//       });
+//   });
+// });
+
+app.get("/files",(req,res,next)=>{
+    checkAccessToken(drive.listFiles,(resData)=>{
+      let files = [];
       resData.map((file) =>{
         files.push({
               name: file.name,
@@ -74,24 +93,11 @@ app.get("/files",checkAuth,(req,res,next)=>{
       });
       res.status(200).json({
         files
-      });
-  });
-    // checkAccessToken(drive.listFiles,(resData)=>{
-    //   let files = [];
-    //   resData.map((file) =>{
-    //     files.push({
-    //           name: file.name,
-    //           id: file.id,
-    //           mimeType: file.mimeType
-    //         });
-    //   });
-    //   res.status(200).json({
-    //     files
-    //   })
-    // });
+      })
+    });
 });
 
-app.get("/upload/:filename" ,(req,res,next)=>{
+app.get("/upload/:filename",checkAuth ,(req,res,next)=>{
   const filename = req.params.filename;
   checkAccessToken(drive.uploadFile,filename, fileID=>{
     res.status(200).json({
@@ -101,7 +107,7 @@ app.get("/upload/:filename" ,(req,res,next)=>{
 })
 
 //download a file
-app.get("/files/:file_id",(req,res,next)=>{
+app.get("/files/:file_id",checkAuth,(req,res,next)=>{
   const fileID = req.params.file_id;
   console.log(fileID);
   checkAccessToken(drive.downloadFiles,fileID,(resData)=>{
@@ -115,13 +121,20 @@ app.get("/files/:file_id",(req,res,next)=>{
   });
 });
 
-app.get("/chunks/:filename", (req,res,next)=>{
+app.get("/chunks/:filename",checkAuth,(req,res,next)=>{
   const filename = req.params.filename;
   chunk.chunking(filename,(chunk_hash)=>{
     res.status(200).json({
       hash: chunk_hash
     });
   });
+});
+
+app.get("/refresh",(req,res,next)=>{
+  const refresh_token = req.headers.refreshtoken;
+  console.log(refresh_token);
+  oAuth2Client.refreshToken(refresh_token);
+  res.sendStatus(200);
 });
 
 //functions 
@@ -139,6 +152,7 @@ function getAccessToken(){
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,
+    prompt: 'consent'
   });
   // console.log('Authorize this app by visiting this url:', authUrl);
   opn(authUrl, {wait: false} );
