@@ -3,11 +3,11 @@ CDDS (Cloud De-Duplication using SHA1) is an effort to reduce deduplication in c
 
 ## Inspiration
 
-This project was made for our final year university project. Proprietary storage service providers like google drive, one drive do not use deduplication on a block level this results in reduced reduced free space as the duplicate data adds to the storage quota. This project overcomes the issues this issue as it will not upload the file twice on the storage server.
+This application was made for our final year university project. We've observed that proprietary storage service providers like google drive and one drive do not use deduplication on a block level this results in reduced available free space as the duplicate data consumes the free storage quota provided to the user. This project overcomes the issues this issue by preventing unnecessary file upload on the storage server that is already present.
 
 ## Approach used
 
-This project makes use of the middleware approach, it acts as bridge between the user(client) and the storage(server).
+This project makes use of the middleware approach, it acts as bridge between the user (client) and the storage(server).
 
 ## Technologies Used
 
@@ -62,11 +62,15 @@ Note: The first time you will be prompted to signin with your account. So you mi
 
 ## Ideas
 
-We have completed the project and moved on with other projects. Even though we are out of time, we still have plenty of ideas that we wanted to implement, but couldn't do so due to time limit that was alloted to this project. 
+We have completed the project and moved on with other projects. Even though we ran out of time, we still had plenty of ideas that we wanted to implement, but couldn't do so due to the time limit that was alloted to this project.
 
 - [ ] Integrate Drive UI with the application
+- [ ] Add option for enabling client side processing to reduce load on middleware
+- [ ] Add E2E between client and middleware.
+- [ ] Create a mobile app for client side
+- [ ] Implement resumeable upload for file larger than 20MB.
 - [ ] Add options for cloud storage like dropbox,onedrive, nextcloud etc.
-- [x] Multiuser support. (feature branch)
+- [X] Multiuser support. (feature branch)
 
 ## Resources
 
